@@ -35,6 +35,8 @@ function App() {
         .then(([res, cardList]) => {
           updateCurrentUser(res);
           updateCards(cardList);
+
+          setEmail(res.email);
         })
         .catch(console.log);
     }
@@ -86,7 +88,7 @@ function App() {
 
   // Лайки
   const handleCardLike = (card) => {
-    const isLiked = card.likes.some(i => i._id === currentUser._id);
+    const isLiked = card.likes.some(idUserLike => idUserLike === currentUser._id);
 
     api.changeLikeCardStatus(card._id, !isLiked)
       .then((newCard) => {
@@ -134,15 +136,22 @@ function App() {
       })
   };
 
+  const updateApiHeaderWithToken = (token) => {
+    api._headers = {
+      ...api._headers,
+      'Authorization': `Bearer ${token}`
+    }
+  }
+
   //авторизация
   const handleLogin = ({ email, password }) => {
     return MestoAuth.authorize(email, password)
       .then((data) => {
         if (data.token) {
+          updateApiHeaderWithToken(data.token);
           localStorage.setItem('token', data.token);
           setLoggedIn(true);
           history.push('/');
-          setEmail(email);
         }
       })
       .catch(() => {
@@ -153,19 +162,30 @@ function App() {
         })
       })
   };
+  
 
   //проверка авторизации
   const tokenCheck = () => {
-    if (localStorage.getItem('token')) {
-      let token = localStorage.getItem('token');
-      MestoAuth.getContent(token).then((res) => {
-        if (res) {
-          setLoggedIn(true);
-          history.push('/');
-          setEmail(res.data.email);
-        }
-      })
-        .catch(console.log);
+    let token = localStorage.getItem('token');
+    if (token) {
+      updateApiHeaderWithToken(token);
+      setLoggedIn(true);
+      history.push('/');
+
+      // let token = localStorage.getItem('token');
+    //   MestoAuth.getContent(token).then((res) => {
+    //     if (res) {
+    //       api._headers = {
+    //         ...api._headers,
+    //         'Authorization': `Bearer ${token}`
+    //       }
+
+    //       setLoggedIn(true);
+    //       history.push('/');
+    //       setEmail(res.data.email);
+    //     }
+    //   })
+    //     .catch(console.log);
     }
   };
 

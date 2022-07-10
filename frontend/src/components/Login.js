@@ -2,8 +2,10 @@ import { useState } from 'react';
 
 function Login(props) {
   const [formParams, setFormParams] = useState({
-    email: '',
-    password: ''
+    // email: '',
+    // password: ''
+    email: 'aaa111@mail.ru',
+    password: 'aaa111'
   });
 
   const handleChange = (e) => {
@@ -38,6 +40,7 @@ function Login(props) {
             autoComplete="off"
             required
             onChange={handleChange}
+            value={formParams.email} // надо убрать
           />
           <span className="email-input-error authorization__error"></span>
         </div>
@@ -54,6 +57,7 @@ function Login(props) {
             autoComplete="off"
             required
             onChange={handleChange}
+            value={formParams.password} // надо убрать
           />
           <span className="password-input-error authorization__error"></span>
         </div>

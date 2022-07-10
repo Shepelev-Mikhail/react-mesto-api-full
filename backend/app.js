@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const { celebrate, Joi } = require('celebrate');
 const { errors } = require('celebrate');
+const cors = require('cors');
 const routerUser = require('./routes/users');
 const routerCard = require('./routes/cards');
 const auth = require('./middlewares/auth');
@@ -12,9 +13,18 @@ const {
 } = require('./controllers/users');
 const NotFoundError = require('./errors/NotFoundError');
 
-const { PORT = 3000 } = process.env;
+const options = {
+  origin: [
+    'http://localhost:3000',
+  ],
+  credentials: true, // эта опция позволяет устанавливать куки
+};
+
+const { PORT = 3001 } = process.env;
 
 const app = express();
+
+app.use('*', cors(options));
 
 // прием данных
 app.use(bodyParser.json());
