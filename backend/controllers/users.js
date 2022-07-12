@@ -6,6 +6,7 @@ const ConflictEmailError = require('../errors/ConflictEmailError');
 const NotFoundError = require('../errors/NotFoundError');
 
 const SECRET_KEY = 'practikum_secret_key';
+const { NODE_ENV, JWT_SECRET } = process.env;
 
 // создание пользователя
 module.exports.createUser = (req, res, next) => {
@@ -136,7 +137,7 @@ module.exports.login = (req, res, next) => {
     .then((user) => {
       const token = jwt.sign(
         { _id: user._id },
-        SECRET_KEY,
+        NODE_ENV === 'production' ? JWT_SECRET : SECRET_KEY,
         { expiresIn: '7d' },
       );
       res.status(200).send({ token });

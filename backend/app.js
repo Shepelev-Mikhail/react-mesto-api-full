@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const { celebrate, Joi } = require('celebrate');
 const { errors } = require('celebrate');
 const cors = require('cors');
+const { requestLogger, errorLogger } = require('./middlewares/logger');
 const routerUser = require('./routes/users');
 const routerCard = require('./routes/cards');
 const auth = require('./middlewares/auth');
@@ -16,6 +17,9 @@ const NotFoundError = require('./errors/NotFoundError');
 const options = {
   origin: [
     'http://localhost:3000',
+    'https://shepelev.front.nomoredomains.xyz',
+    'https://www.shepelev.front.nomoredomains.xyz',
+    'https://Shepelev-Mikhail.github.io',
   ],
   credentials: true, // эта опция позволяет устанавливать куки
 };
@@ -29,6 +33,14 @@ app.use('*', cors(options));
 // прием данных
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use(requestLogger);
+
+app.get('/crash-test', () => {
+  setTimeout(() => {
+    throw new Error('Сервер сейчас упадёт');
+  }, 0);
+});
 
 // подключение роутов
 app.post('/signin', celebrate({
@@ -54,6 +66,8 @@ app.use('/', auth, routerCard);
 app.use((req, res, next) => {
   next(new NotFoundError('Page not found'));
 });
+
+app.use(errorLogger);
 
 // подключение монгоДБ
 mongoose.connect('mongodb://localhost:27017/mestodb', {
