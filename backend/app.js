@@ -18,7 +18,6 @@ const options = {
   origin: [
     'http://localhost:3000',
     'https://shepelev.front.nomoredomains.xyz',
-    'https://www.shepelev.front.nomoredomains.xyz',
     'https://Shepelev-Mikhail.github.io',
   ],
   credentials: true, // эта опция позволяет устанавливать куки
