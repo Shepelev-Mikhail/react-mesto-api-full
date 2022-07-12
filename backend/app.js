@@ -14,22 +14,23 @@ const {
 } = require('./controllers/users');
 const NotFoundError = require('./errors/NotFoundError');
 
-const options = {
-  origin: [
-    'http://localhost:3000',
-    'http://localhost:3001',
-    'https://shepelev.front.nomoredomains.xyz',
-    'https://api.shepelev.front.nomoredomains.xyz',
-    'https://Shepelev-Mikhail.github.io',
-  ],
-  credentials: true, // эта опция позволяет устанавливать куки
-};
+// const options = {
+//   origin: [
+//     'http://localhost:3000',
+//     'http://localhost:3001',
+//     'https://shepelev.front.nomoredomains.xyz',
+//     'https://api.shepelev.front.nomoredomains.xyz',
+//     'https://Shepelev-Mikhail.github.io',
+//   ],
+//   credentials: true, // эта опция позволяет устанавливать куки
+// };
 
 const { PORT = 3001 } = process.env;
 
 const app = express();
 
-app.use('*', cors(options));
+// app.use('*', cors(options));
+app.use(cors());
 
 // прием данных
 app.use(bodyParser.json());
