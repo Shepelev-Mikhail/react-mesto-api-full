@@ -5,6 +5,8 @@ const ValidError = require('../errors/ValidError');
 const ConflictEmailError = require('../errors/ConflictEmailError');
 const NotFoundError = require('../errors/NotFoundError');
 
+require('dotenv').config();
+
 const SECRET_KEY = 'practikum_secret_key';
 const { NODE_ENV, JWT_SECRET } = process.env;
 
