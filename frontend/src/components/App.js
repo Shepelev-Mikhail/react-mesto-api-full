@@ -171,21 +171,6 @@ function App() {
       updateApiHeaderWithToken(token);
       setLoggedIn(true);
       history.push('/');
-
-      // let token = localStorage.getItem('token');
-    //   MestoAuth.getContent(token).then((res) => {
-    //     if (res) {
-    //       api._headers = {
-    //         ...api._headers,
-    //         'Authorization': `Bearer ${token}`
-    //       }
-
-    //       setLoggedIn(true);
-    //       history.push('/');
-    //       setEmail(res.data.email);
-    //     }
-    //   })
-    //     .catch(console.log);
     }
   };
 

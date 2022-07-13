@@ -98,7 +98,6 @@ class Api {
 };
 
 export let api = new Api({
-  // baseUrl: 'https://mesto.nomoreparties.co/v1/cohort-39',
   baseUrl: `${window.location.protocol}${process.env.REACT_APP_API_URL || '//localhost:3001'}`,
   headers: {
     'Content-Type': 'application/json',
