@@ -1,5 +1,6 @@
 // export const BASE_URL = 'https://auth.nomoreparties.co';
-export const BASE_URL = `${window.location.protocol}${process.env.REACT_APP_API_URL || '//localhost:3001'}`;
+// export const BASE_URL = `${window.location.protocol}${process.env.REACT_APP_API_URL || '//localhost:3001'}`;
+export const BASE_URL = '//localhost:3001';
 
 const checkResponse = (res) => {
   return res.ok ? res.json() : Promise.reject(res.status)
