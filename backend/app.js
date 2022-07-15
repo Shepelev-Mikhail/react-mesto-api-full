@@ -3,8 +3,6 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const { errors } = require('celebrate');
 const cors = require('cors');
-const rateLimit = require('express-rate-limit');
-const helmet = require('helmet');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const routerUser = require('./routes/users');
 const routerCard = require('./routes/cards');
@@ -30,15 +28,6 @@ const options = {
 const { PORT = 3001 } = process.env;
 
 const app = express();
-
-app.use(helmet());
-
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 100,
-});
-
-app.use(limiter);
 
 app.use('*', cors(options));
 
