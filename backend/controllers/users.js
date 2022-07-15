@@ -62,16 +62,17 @@ module.exports.findAllUser = (req, res, next) => {
 // найти пользователя по айди
 module.exports.findByIdUser = (req, res, next) => {
   User.findById(req.params.userId)
+    .orFail(new Error('NotFoundError'))
     .then((user) => {
-      if (!user) {
-        next(new NotFoundError('Пользователь с указанным id не найден'));
-        return;
-      }
       res.status(200).send(user);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
         next(new ValidError('Передан некорректный id пользователя'));
+        return;
+      }
+      if (err.message === 'NotFoundError') {
+        next(new NotFoundError('Пользователь с указанным id не найден'));
         return;
       }
       next(err);

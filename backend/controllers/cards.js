@@ -33,11 +33,8 @@ module.exports.deleteCard = (req, res, next) => {
   };
 
   Card.findById(req.params.cardId)
+    .orFail(new Error('NotFoundError'))
     .then((card) => {
-      if (!card) {
-        next(new NotFoundError('Карточка с указанным id не найдена'));
-        return;
-      }
       if (card.owner.toString() !== req.user._id) {
         next(new AccessError('Вы не являетесь владельцем карточки'));
         return;
@@ -47,6 +44,10 @@ module.exports.deleteCard = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'CastError') {
         next(new ValidError('Переданы некорректные данные карточки'));
+        return;
+      }
+      if (err.message === 'NotFoundError') {
+        next(new NotFoundError('Карточка с указанным id не найдена'));
         return;
       }
       next(err);
@@ -60,16 +61,17 @@ module.exports.addLike = (req, res, next) => {
     { $addToSet: { likes: req.user._id } }, // добавить _id в массив, если его там нет
     { new: true },
   )
+    .orFail(new Error('NotFoundError'))
     .then((card) => {
-      if (!card) {
-        next(new NotFoundError('Карточка с указанным id не найдена'));
-        return;
-      }
       res.status(200).send(card);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
         next(new ValidError('Переданы некорректные данные карточки'));
+        return;
+      }
+      if (err.message === 'NotFoundError') {
+        next(new NotFoundError('Карточка с указанным id не найдена'));
         return;
       }
       next(err);
@@ -83,11 +85,17 @@ module.exports.deleteLike = (req, res, next) => {
     { $pull: { likes: req.user._id } }, // убрать _id из массива
     { new: true },
   )
-    .then((card) => {
-      if (!card) {
-        throw new NotFoundError('Карточка с указанным id не найдена');
+    .orFail(new Error('NotFoundError'))
+    .then((card) => res.status(200).send(card))
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        next(new ValidError('Переданы некорректные данные карточки'));
+        return;
       }
-      return res.status(200).send(card);
-    })
-    .catch(next);
+      if (err.message === 'NotFoundError') {
+        next(new NotFoundError('Карточка с указанным id не найдена'));
+        return;
+      }
+      next(err);
+    });
 };
